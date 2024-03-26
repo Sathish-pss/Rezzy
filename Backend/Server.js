@@ -4,21 +4,17 @@ const app = express();
 const port = 3000;
 // Initializing the cors
 const cors = require("cors");
-// Initializing the mongoose ODM here
-const mongoose = require("mongoose");
-// Initializing the JWT here
-const jwt = require("jsonwebtoken");
-
 // Initializing the cookie parser
 const cookieParser = require("cookie-parser");
-
 // Initializing the file system here
-const fs = require("fs");
-
 const { dbConnect } = require("./config/db");
-
 // Importing the dotenv file here
 require("dotenv").config();
+//Importing the Routes here
+const authRoutes = require("./src/routes/auth");
+const hotelRoutes = require("./src/routes/hotels");
+const roomRoutes = require("./src/routes/rooms");
+const userRoutes = require("./src/routes/users");
 //Function to call the Database connection
 dbConnect();
 
@@ -33,12 +29,20 @@ app.use(express.json());
 app.use(cookieParser());
 
 /**
- * Defining the API Routes here
+ * Defining the API Test Route here
  */
 // Simple Get API for Testing
 app.get("/test", (req, res) => {
   res.send("Server created Succesfully for the Rezzy APP");
 });
+
+/**
+ * Defining the Routes here
+ */
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/hotels", hotelRoutes);
+app.use("/api/rooms", roomRoutes);
 
 // Starting the server and listening to the specified port
 app.listen(port, () => {
