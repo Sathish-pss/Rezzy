@@ -1,7 +1,6 @@
 // Importing the necessary modules and files
 const User = require("../models/User.js");
 const bcrypt = require("bcryptjs");
-const createError = require("../middleware/error.js");
 const jwt = require("jsonwebtoken");
 
 /**
@@ -38,18 +37,18 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ username: req.body.username });
-    if (!user) return next(createError(404, "User not found!"));
+    if (!user) return res.status(404).json({ message: "User Not Found" });
 
     const isPasswordCorrect = await bcrypt.compare(
       req.body.password,
-      user.password,
+      user.password
     );
     if (!isPasswordCorrect)
-      return next(createError(400, "Wrong password or username!"));
+      return res.status(400).json({ message: "Incorrect Password" });
 
     const token = jwt.sign(
       { id: user._id, isAdmin: user.isAdmin },
-      process.env.JWT,
+      process.env.JWT
     );
 
     const { password, isAdmin, ...otherDetails } = user._doc;

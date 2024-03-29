@@ -12,7 +12,7 @@ import axios from "axios";
 /**
  *
  * @param {*} param0
- * @returns Functional Component returns the New Upload Files
+ * @returns Functional Component to add new User
  */
 const New = ({ inputs, title }) => {
   const [file, setFile] = useState(""); // State variable to store the FIles

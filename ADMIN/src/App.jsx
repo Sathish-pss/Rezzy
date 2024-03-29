@@ -92,6 +92,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              {/* Single Product View Page */}
               <Route
                 path=":productId"
                 element={
@@ -100,6 +101,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              {/* New Hotel Page */}
               <Route
                 path="new"
                 element={
@@ -109,6 +111,7 @@ function App() {
                 }
               />
             </Route>
+            {/* Rooms Page */}
             <Route path="rooms">
               <Route
                 index
@@ -118,6 +121,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              {/* Single Product View Page */}
               <Route
                 path=":productId"
                 element={
@@ -126,6 +130,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              {/* New rooms Page */}
               <Route
                 path="new"
                 element={

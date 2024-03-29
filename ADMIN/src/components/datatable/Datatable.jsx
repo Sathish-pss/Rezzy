@@ -5,7 +5,7 @@ import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 // Importing the customized Components
 import useFetch from "../../hooks/useFetch";
-import { userColumns, userRows } from "../../datatablesource";
+import { userColumns } from "../../datatablesource";
 // Importing the External Packages here
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -61,15 +61,17 @@ const Datatable = ({ columns }) => {
           Add New
         </Link>
       </div>
-      <DataGrid
-        className="datagrid"
-        rows={list}
-        columns={columns.concat(actionColumn)}
-        pageSize={9}
-        rowsPerPageOptions={[9]}
-        checkboxSelection
-        getRowId={(row) => row._id}
-      />
+      {list && (
+        <DataGrid
+          className="datagrid"
+          rows={list}
+          columns={columns.concat(actionColumn)}
+          pageSize={9}
+          rowsPerPageOptions={[9]}
+          checkboxSelection
+          getRowId={(row) => row._id}
+        />
+      )}
     </div>
   );
 };
