@@ -4,10 +4,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 /**
- *
- * @param {*} req
- * @param {*} res
- * @param {*} next
  * @returns Function to Register the Users
  */
 const register = async (req, res, next) => {
@@ -28,10 +24,6 @@ const register = async (req, res, next) => {
 };
 
 /**
- *
- * @param {*} req
- * @param {*} res
- * @param {*} next
  * @returns Function to Login the user
  */
 const login = async (req, res, next) => {
@@ -46,18 +38,14 @@ const login = async (req, res, next) => {
     if (!isPasswordCorrect)
       return res.status(400).json({ message: "Incorrect Password" });
 
-    const token = jwt.sign(
-      { id: user._id, isAdmin: user.isAdmin },
-      process.env.JWT
-    );
+    const jwtSecret = process.env.JWT; // Change process.env.JWT to process.env.JWT_SECRET
+    const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, jwtSecret, {
+      expiresIn: "1h",
+    });
 
     const { password, isAdmin, ...otherDetails } = user._doc;
-    res
-      .cookie("access_token", token, {
-        httpOnly: true,
-      })
-      .status(200)
-      .json({ details: { ...otherDetails }, isAdmin });
+    res.cookie("access_token", token, { httpOnly: true });
+    res.status(200).json({ details: { ...otherDetails }, isAdmin, token });
   } catch (err) {
     next(err);
   }

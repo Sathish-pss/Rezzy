@@ -26,21 +26,36 @@ const New = ({ inputs, title }) => {
   // Function to handle File Upload
   const handleClick = async (e) => {
     e.preventDefault();
-    const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", "upload");
     try {
-      const uploadRes = await axios.post(
-        "https://api.cloudinary.com/v1_1/drsqoaebw/image/upload",
-        data
-      );
+      const list = await Promise.all(
+        Object.values(file).map(async (file) => {
+          const data = new FormData();
+          data.append("file", file);
+          data.append("upload_preset", "upload");
 
-      const { url } = uploadRes.data;
+          // CORS Handling (Consider using a Cloudinary SDK for convenience)
+          const uploadRes = await fetch(
+            "https://api.cloudinary.com/v1_1/drsqoaebw/image/upload",
+            {
+              method: "POST",
+              body: data,
+            }
+          );
+
+          if (!uploadRes.ok) {
+            throw new Error("Failed to upload file to Cloudinary");
+          }
+
+          const { url } = await uploadRes.json();
+          return url;
+        })
+      );
 
       const newUser = {
         ...info,
-        img: url,
+        img: list,
       };
+      console.log("newUser==>", newUser);
 
       await axios.post("/auth/register", newUser);
     } catch (err) {
@@ -63,7 +78,7 @@ const New = ({ inputs, title }) => {
             <img
               src={
                 file
-                  ? URL.createObjectURL(file)
+                  ? URL.createObjectURL(file[0])
                   : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
               }
               alt=""
@@ -79,7 +94,8 @@ const New = ({ inputs, title }) => {
                 <input
                   type="file"
                   id="file"
-                  onChange={(e) => setFile(e.target.files[0])}
+                  multiple
+                  onChange={(e) => setFile(e.target.files)}
                   style={{ display: "none" }}
                 />
               </div>

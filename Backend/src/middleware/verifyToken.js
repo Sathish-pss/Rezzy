@@ -1,32 +1,23 @@
 // Importing the necessary modules
 const jwt = require("jsonwebtoken");
-const createError = require("../middleware/error.js");
 
 /**
- *
- * @param {*} req
- * @param {*} res
- * @param {*} next
  * @returns Function to verify the Token
  */
 const verifyToken = (req, res, next) => {
-  const token = req.cookies.access_token;
-  if (!token) {
-    return next(createError(401, "You are not authenticated!"));
+  const authHeader = req.headers.authorization || req.headers.Authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json("You are not authenticated");
   }
 
+  const token = authHeader.split(" ")[1];
   jwt.verify(token, process.env.JWT, (err, user) => {
-    if (err) return next(createError(403, "Token is not valid!"));
+    if (err) return res.status(403).json("Token is not valid");
     req.user = user;
     next();
   });
 };
-
 /**
- *
- * @param {*} req
- * @param {*} res
- * @param {*} next
  * @returns Function to return the Verify user
  */
 const verifyUser = (req, res, next) => {
@@ -34,15 +25,11 @@ const verifyUser = (req, res, next) => {
     if (req.user.id === req.params.id || req.user.isAdmin) {
       next();
     } else {
-      return next(createError(403, "You are not authorized!"));
+      return res.status(403).json("You are not a authorized user");
     }
   });
 };
 /**
- *
- * @param {*} req
- * @param {*} res
- * @param {*} next
  * @returns Function to verify the user is Admin
  */
 const verifyAdmin = (req, res, next) => {
@@ -50,7 +37,7 @@ const verifyAdmin = (req, res, next) => {
     if (req.user.isAdmin) {
       next();
     } else {
-      return next(createError(403, "You are not authorized!"));
+      return res.status(403).json("You are not a authorized Admin");
     }
   });
 };

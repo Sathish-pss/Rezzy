@@ -3,7 +3,7 @@ import { createContext, useEffect, useReducer } from "react";
 
 // Defining the Initial State here
 const INITIAL_STATE = {
-  user: JSON.parse(localStorage.getItem("user")) || null,
+  user: JSON.parse(sessionStorage.getItem("user")) || null,
   loading: false,
   error: null,
 };
@@ -49,7 +49,7 @@ export const AuthContextProvider = ({ children }) => {
 
   // Fetching the User details from the Local storage
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(state.user));
+    sessionStorage.setItem("user", JSON.stringify(state.user));
   }, [state.user]);
 
   // Returning the Context here

@@ -33,23 +33,31 @@ const NewHotel = () => {
     setRooms(value);
   };
 
-  console.log(files);
-
   // Function to Upload the Files into cloudinary api - Upload a New Hotel
   const handleClick = async (e) => {
     e.preventDefault();
+
     try {
       const list = await Promise.all(
         Object.values(files).map(async (file) => {
           const data = new FormData();
           data.append("file", file);
           data.append("upload_preset", "upload");
-          const uploadRes = await axios.post(
+
+          // CORS Handling (Consider using a Cloudinary SDK for convenience)
+          const uploadRes = await fetch(
             "https://api.cloudinary.com/v1_1/drsqoaebw/image/upload",
-            data
+            {
+              method: "POST",
+              body: data,
+            }
           );
 
-          const { url } = uploadRes.data;
+          if (!uploadRes.ok) {
+            throw new Error("Failed to upload file to Cloudinary");
+          }
+
+          const { url } = await uploadRes.json();
           return url;
         })
       );
@@ -62,7 +70,8 @@ const NewHotel = () => {
 
       await axios.post("/hotels", newhotel);
     } catch (err) {
-      console.log(err);
+      console.error("Error:", err);
+      // Handle errors appropriately (e.g., display user-friendly messages)
     }
   };
   return (

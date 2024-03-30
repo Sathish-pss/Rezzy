@@ -41,7 +41,8 @@ const Login = () => {
       const res = await axios.post("/auth/login", credentials);
       if (res.data.isAdmin) {
         dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
-
+        // Storing the token in the Session
+        sessionStorage.setItem("access_token", res?.data?.token);
         navigate("/");
       } else {
         dispatch({
