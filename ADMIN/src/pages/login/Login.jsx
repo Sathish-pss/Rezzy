@@ -1,7 +1,8 @@
-import { useContext, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 // Importing the SCSS files here
 import "./login.scss";
 // Importing the External Libraries
+import { Grid, Typography, Box, Button } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 // Importing the Customized Components here
@@ -56,31 +57,61 @@ const Login = () => {
   };
 
   return (
-    <div className="login">
-      <div className="lContainer">
-        {/* User Name Input Field */}
-        <input
-          type="text"
-          placeholder="username"
-          id="username"
-          onChange={handleChange}
-          className="lInput"
-        />
-        {/* Password input Field */}
-        <input
-          type="password"
-          placeholder="password"
-          id="password"
-          onChange={handleChange}
-          className="lInput"
-        />
-        {/* Login Button */}
-        <button disabled={loading} onClick={handleClick} className="lButton">
-          Login
-        </button>
-        {error && <span>{error.message}</span>}
-      </div>
-    </div>
+    <Fragment>
+      <Grid container alignItems={"center"}>
+        <Grid item xs={6}>
+          <Box
+            component={"img"}
+            alt="logi_img"
+            src="./assets/login.jpg"
+            width={600}
+            height={400}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <Grid
+            container
+            direction={"column"}
+            alignItems={"center"}
+            spacing={2}>
+            <Grid item>
+              {/* User Name Input Field */}
+              <input
+                type="text"
+                placeholder="Enter username"
+                id="username"
+                onChange={handleChange}
+                className="lInput"
+                autoComplete="off"
+              />
+            </Grid>
+            <Grid item>
+              {/* Password input Field */}
+              <input
+                type="password"
+                placeholder="Enter password"
+                id="password"
+                onChange={handleChange}
+                className="lInput"
+                autoComplete="off"
+              />
+            </Grid>
+            <Grid item>
+              <Button
+                onClick={handleClick}
+                variant="contained"
+                fullWidth
+                sx={{ width: "100%" }}>
+                Login
+              </Button>
+            </Grid>
+            <Grid item>
+              <Typography>{error && <span>{error.message}</span>}</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Fragment>
   );
 };
 

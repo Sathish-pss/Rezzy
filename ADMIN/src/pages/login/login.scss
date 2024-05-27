@@ -1,19 +1,26 @@
 .login {
-    height: 100vh;
+     
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 10px;
   }
   
   .lContainer {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    border: 1px solid red;
+    padding: 10px;
+    width: 50%;
+
   }
   
   .lInput{
-    height: 30px;
+    height: 100%;
     padding: 10px;
+    width: 100%;
+    border-color: 1px solid green;
   }
   
   .lButton {

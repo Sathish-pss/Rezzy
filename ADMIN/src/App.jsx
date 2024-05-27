@@ -1,6 +1,7 @@
 import { useContext } from "react";
 // Importing the SCSS Files here
 import "./style/dark.scss";
+import "./index.css";
 // Importing the Pages here
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";

@@ -1,106 +1,44 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 // Importing the sccs file here
 import "./sidebar.scss";
-// Importing the MUI & React ICons here
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-import StoreIcon from "@mui/icons-material/Store";
-import InsertChartIcon from "@mui/icons-material/InsertChart";
-import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import SettingsSystemDaydreamOutlinedIcon from "@mui/icons-material/SettingsSystemDaydreamOutlined";
-import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+// Importing the MUI & React ICons here 
 // Importing the External packages here
 import { Link } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
+// Import Data files here
+import { sideBar } from "../../data/data";
 
 const Sidebar = () => {
+  const [sidebarData, setSidebarData] = useState(sideBar); // State to set the side bar data
   // Dispatching the Props from the Darkmode context
   const { dispatch } = useContext(DarkModeContext);
   return (
     <div className="sidebar">
       <div className="top">
         <Link to="/" style={{ textDecoration: "none" }}>
-          <span className="logo">Sathish</span>
+          <span className="logo">Rezzy</span>
         </Link>
       </div>
       <hr />
       <div className="center">
-        <ul>
-          <p className="title">MAIN</p>
-          <li>
-            <DashboardIcon className="icon" />
-            <span>Dashboard</span>
-          </li>
-          <p className="title">LISTS</p>
-          <Link to="/users" style={{ textDecoration: "none" }}>
-            <li>
-              <PersonOutlineIcon className="icon" />
-              <span>Users</span>
-            </li>
-          </Link>
-          <Link to="/hotels" style={{ textDecoration: "none" }}>
-            <li>
-              <StoreIcon className="icon" />
-              <span>Hotels</span>
-            </li>
-          </Link>
-          <Link to="/rooms" style={{ textDecoration: "none" }}>
-            <li>
-              <CreditCardIcon className="icon" />
-              <span>Rooms</span>
-            </li>
-          </Link>
-          <li>
-            <LocalShippingIcon className="icon" />
-            <span>Delivery</span>
-          </li>
-          <p className="title">USEFUL</p>
-          <li>
-            <InsertChartIcon className="icon" />
-            <span>Stats</span>
-          </li>
-          <li>
-            <NotificationsNoneIcon className="icon" />
-            <span>Notifications</span>
-          </li>
-          <p className="title">SERVICE</p>
-          <li>
-            <SettingsSystemDaydreamOutlinedIcon className="icon" />
-            <span>System Health</span>
-          </li>
-          <li>
-            <PsychologyOutlinedIcon className="icon" />
-            <span>Logs</span>
-          </li>
-          <li>
-            <SettingsApplicationsIcon className="icon" />
-            <span>Settings</span>
-          </li>
-          <p className="title">USER</p>
-          <li>
-            <AccountCircleOutlinedIcon className="icon" />
-            <span>Profile</span>
-          </li>
-          <li>
-            <ExitToAppIcon className="icon" />
-            <span>Logout</span>
-          </li>
-        </ul>
+        {sidebarData?.map((data, index) => (
+          <ul key={data?.id}>
+            <Link to={data?.link} style={{ textDecoration: "none" }}>
+              <li>
+                {data?.icon}
+                <span>{data?.name}</span>
+              </li>
+            </Link>
+          </ul>
+        ))}
       </div>
       <div className="bottom">
         <div
           className="colorOption"
-          onClick={() => dispatch({ type: "LIGHT" })}
-        ></div>
+          onClick={() => dispatch({ type: "LIGHT" })}></div>
         <div
           className="colorOption"
-          onClick={() => dispatch({ type: "DARK" })}
-        ></div>
+          onClick={() => dispatch({ type: "DARK" })}></div>
       </div>
     </div>
   );
