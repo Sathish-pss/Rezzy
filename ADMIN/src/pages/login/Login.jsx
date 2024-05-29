@@ -1,45 +1,56 @@
 import { Fragment, useContext, useState } from "react";
 // Importing the SCSS files here
 import "./login.scss";
+import { customStyles } from "../../style/styles";
 // Importing the External Libraries
-import { Grid, Typography, Box, Button } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  Box,
+  Button,
+  TextField,
+  FormControl,
+  FormLabel,
+} from "@mui/material";
+import { useFormik } from "formik";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 // Importing the Customized Components here
 import { AuthContext } from "../../context/AuthContext";
 
+// Initial values for Login Page
+const initialValues = {
+  username: "",
+  password: "",
+};
 /**
  *
  * @returns Functional Component that returns the Login Page
  */
 const Login = () => {
-  // State Variable to store the Input Credentials
-  const [credentials, setCredentials] = useState({
-    username: undefined,
-    password: undefined,
+  // Initializing the Login form using useFormik hook here
+  const loginFormik = useFormik({
+    initialValues: initialValues,
+    onSubmit: () => {
+      handleSubmit();
+    },
   });
 
   // Destructuring the User Context from the Auth Context
-  const { loading, error, dispatch } = useContext(AuthContext);
+  const { error, dispatch } = useContext(AuthContext);
 
   // Assigning a variable to the Navigate hook
   const navigate = useNavigate();
 
-  // Function to set the Input Values
-  const handleChange = (e) => {
-    setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
-  };
-
   /**
-   *
-   * @param {*} e
+    
    * @returns Function to Submit the Login Form
    */
-  const handleClick = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     dispatch({ type: "LOGIN_START" });
     try {
-      const res = await axios.post("/auth/login", credentials);
+      let payload = loginFormik?.values;
+      const res = await axios.post("/auth/login", payload);
       if (res.data.isAdmin) {
         dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
         // Storing the token in the Session
@@ -57,62 +68,70 @@ const Login = () => {
   };
 
   return (
-    <Fragment>
-      <Grid container alignItems={"center"}>
-        <Grid item xs={6}>
-          <Box
-            component={"img"}
-            alt="logi_img"
-            src="./assets/login.jpg"
-            width={600}
-            height={400}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <Grid
-            container
-            direction={"column"}
-            alignItems={"center"}
-            spacing={2}>
-            <Grid item>
-              {/* User Name Input Field */}
-              <input
-                type="text"
-                placeholder="Enter username"
-                id="username"
-                onChange={handleChange}
-                className="lInput"
-                autoComplete="off"
-              />
-            </Grid>
-            <Grid item>
-              {/* Password input Field */}
-              <input
-                type="password"
-                placeholder="Enter password"
-                id="password"
-                onChange={handleChange}
-                className="lInput"
-                autoComplete="off"
-              />
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleClick}
-                variant="contained"
-                fullWidth
-                sx={{ width: "100%" }}>
-                Login
-              </Button>
-            </Grid>
-            <Grid item>
-              <Typography>{error && <span>{error.message}</span>}</Typography>
-            </Grid>
-          </Grid>
-        </Grid>
+    <Grid
+      container
+      alignItems={"center"}
+      justifyContent={"center"}
+      direction={"column"}
+      sx={{ minHeight: "100vh" }}>
+      {/* title text */}
+      <Grid item>
+        <Typography sx={titleTextStyle}>Rezzy</Typography>
       </Grid>
-    </Fragment>
+
+      {/* Login text */}
+      <Grid item>
+        <Typography sx={primaryTextStyle}>Login here</Typography>
+      </Grid>
+
+      {/* User name form control */}
+      <Grid item>
+        <FormControl>
+          <FormLabel sx={formLableNameStyle}>Username</FormLabel>
+          <TextField
+            name="username"
+            onChange={loginFormik?.handleChange}
+            size="small"
+            type="text"
+            autoComplete="off"
+            placeholder="Enter User Name"
+            value={loginFormik?.values?.username}
+          />
+        </FormControl>
+      </Grid>
+
+      {/* Password Form Control */}
+      <Grid item>
+        <FormControl>
+          <FormLabel sx={formLableNameStyle}>Password</FormLabel>
+          <TextField
+            name="password"
+            onChange={loginFormik?.handleChange}
+            size="small"
+            type="text"
+            autoComplete="off"
+            value={loginFormik?.values?.password}
+            placeholder="Enter Password"
+          />
+        </FormControl>
+      </Grid>
+
+      {/* Submit Button */}
+      <Grid item>
+        <Button
+          onClick={loginFormik?.handleSubmit}
+          variant="contained"
+          fullWidth>
+          Login
+        </Button>
+      </Grid>
+      <Grid item>
+        <Typography>{error && <span>{error.message}</span>}</Typography>
+      </Grid>
+    </Grid>
   );
 };
 
+// Custom styles can be destructured here
+const { primaryTextStyle, titleTextStyle, formLableNameStyle } = customStyles;
 export default Login;
